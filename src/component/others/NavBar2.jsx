@@ -5,7 +5,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
@@ -46,32 +45,7 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
 }));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-export default function NavBar2({userData,setUserData}) {
+export default function NavBar2({ userData, setUserData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const navigate = useNavigate();
@@ -80,13 +54,8 @@ export default function NavBar2({userData,setUserData}) {
   const isActive = (path) => {
     return location.pathname === path;
   };
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -167,68 +136,79 @@ export default function NavBar2({userData,setUserData}) {
       />
     </Menu>
   );
-  const adminLinks = [
-    { text: "Home", icon: <HomeIcon />, route: "/Layout" },
+  const navMenu = [
+    {
+      text: "Home",
+      icon: <HomeIcon />,
+      route: "/Layout",
+      role: ["admin", "user"],
+    },
     {
       text: "All Question",
       icon: <QuizIcon />,
       route: "/Layout/AllQuestionAdmin",
+      role: ["admin"],
     },
     {
       text: "Add Question",
       icon: <LibraryAddIcon />,
       route: "/Layout/CreateQuestion",
+      role: ["admin"],
     },
     {
       text: "All Result",
       icon: <ManageHistoryOutlinedIcon />,
       route: "/Layout/AllQuizDetails",
+      role: ["admin"],
     },
-  ];
-
-  const employeeLinks = [
-    { text: "Home", icon: <HomeIcon />, route: "/Layout" },
     {
       text: "Take Quiz",
       icon: <QuizIcon />,
       route: "/Layout/TakeQuiz",
+      role: ["user"],
     },
     {
       text: "Final Result",
       icon: <BackupTableIcon />,
       route: "/Layout/FinalResult",
+      role: ["user"],
     },
   ];
 
-  const renderNavLinks = (links) => {
-    return links.map(({ text, icon, route }) => (
-      <ListItem
-        disablePadding
-        key={text}
-        sx={[
-          {
-            display: "flex",
-            borderRadius: "9999px",
-            alignItems:"center",
-            justifyContent:"center",
-            width: "230px",
-            height: "40px",
-          },
-          isActive(route)
-            ? { backgroundColor: "#43b5a0", color: "white" }
-            : { backgroundColor: "transparent", color: "#43b5a0" },
-        ]}
-        onClick={() => navigate(route)}
-      >
-        <ListItemButton sx={{display:"flex",gap:"2px"}}>
-          <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-            {icon}
-          </ListItemIcon>
-          <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-        </ListItemButton>
-      </ListItem>
-    ));
+  const renderNavLinks = (links, userRole) => {
+    return links.map(({ text, icon, route, role }) => {
+      if (role.includes(userRole)) {
+        return (
+          <ListItem
+            disablePadding
+            key={text}
+            sx={[
+              {
+                display: "flex",
+                borderRadius: "9999px",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "230px",
+                height: "40px",
+              },
+              isActive(route)
+                ? { backgroundColor: "#43b5a0", color: "white" }
+                : { backgroundColor: "transparent", color: "#43b5a0" },
+            ]}
+            onClick={() => navigate(route)}
+          >
+            <ListItemButton sx={{ display: "flex", gap: "2px" }}>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        );
+      }
+    });
   };
+
   return (
     <Box>
       <AppBar
@@ -246,7 +226,7 @@ export default function NavBar2({userData,setUserData}) {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" ,width:"280px" } }}
+            sx={{ display: { xs: "none", sm: "block", width: "280px" } }}
           >
             <img src={logo} alt />
           </Typography>
@@ -276,14 +256,12 @@ export default function NavBar2({userData,setUserData}) {
                   gap: "1rem",
                 }}
               >
-                {userData.role === "admin"
-                  ? renderNavLinks(adminLinks)
-                  : renderNavLinks(employeeLinks)}
+                {userData.role && renderNavLinks(navMenu, userData.role)}
               </List>
             </Box>
           </Box>
           <Box sx={{ display: { xs: "none", md: "flex" }, color: "#43b5a0" }}>
-            <AccountInfo setUserData={setUserData} userData={userData}/>
+            <AccountInfo setUserData={setUserData} userData={userData} />
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

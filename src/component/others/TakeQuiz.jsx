@@ -82,7 +82,7 @@ const TakeQuiz = ({
   }
   return (
     <>
-      <div className="flex items-center mt-[-2rem]">
+      <div className="flex items-center">
         <img src={didu9} alt="" className="w-[11rem]" />
         <h1 className="text-3xl font-semibold">Your Question space Here</h1>
       </div>
