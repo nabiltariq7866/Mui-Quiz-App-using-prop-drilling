@@ -78,7 +78,7 @@ const TakeQuiz = ({
    
     localStorage.removeItem("TempDatastore");
 
-    navigate("/EmployeeDashboard/FinalResult", { replace: true });
+    navigate("/Layout/FinalResult", { replace: true });
   }
   return (
     <>

@@ -168,35 +168,35 @@ export default function NavBar2({userData,setUserData}) {
     </Menu>
   );
   const adminLinks = [
-    { text: "Home", icon: <HomeIcon />, route: "/AdminDashboard" },
+    { text: "Home", icon: <HomeIcon />, route: "/Layout" },
     {
       text: "All Question",
       icon: <QuizIcon />,
-      route: "/AdminDashboard/AllQuestionAdmin",
+      route: "/Layout/AllQuestionAdmin",
     },
     {
       text: "Add Question",
       icon: <LibraryAddIcon />,
-      route: "/AdminDashboard/CreateQuestion",
+      route: "/Layout/CreateQuestion",
     },
     {
       text: "All Result",
       icon: <ManageHistoryOutlinedIcon />,
-      route: "/AdminDashboard/AllQuizDetails",
+      route: "/Layout/AllQuizDetails",
     },
   ];
 
   const employeeLinks = [
-    { text: "Home", icon: <HomeIcon />, route: "/EmployeeDashboard" },
+    { text: "Home", icon: <HomeIcon />, route: "/Layout" },
     {
       text: "Take Quiz",
       icon: <QuizIcon />,
-      route: "/EmployeeDashboard/TakeQuiz",
+      route: "/Layout/TakeQuiz",
     },
     {
       text: "Final Result",
       icon: <BackupTableIcon />,
-      route: "/EmployeeDashboard/FinalResult",
+      route: "/Layout/FinalResult",
     },
   ];
 

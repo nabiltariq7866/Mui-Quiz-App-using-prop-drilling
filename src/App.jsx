@@ -10,6 +10,7 @@ import FinalResult from "./component/others/FinalResult";
 import AllQuizDetails from "./component/others/AllQuizDetails";
 import TakeQuiz from "./component/others/TakeQuiz";
 import Login from "./component/Auth/Login";
+import Layout from "./component/Dashboard/Layout";
 function setLocalStorage(name, item) {
   localStorage.setItem(name, JSON.stringify(item));
 }
@@ -20,7 +21,9 @@ function getLocalStorage(name) {
 function App() {
   const [userData, setUserData] = useState(getLocalStorage("login"));
   const [quizData, setQuizData] = useState(getLocalStorage("quizData"));
-  const [adminQuestionCollection, setAdminQuestionCollection] = useState( getLocalStorage("AdminQuestionCollectin"));
+  const [adminQuestionCollection, setAdminQuestionCollection] = useState(
+    getLocalStorage("AdminQuestionCollectin")
+  );
   useEffect(() => {
     setLocalStorage("AdminQuestionCollectin", adminQuestionCollection);
   }, [adminQuestionCollection]);
@@ -37,16 +40,16 @@ function App() {
       element: <Login setUserData={setUserData} />,
     },
     {
-      path: "/EmployeeDashboard",
+      path: "/Layout",
       element: (
         <ProtectedRoutes
           Element={
-            <EmployeeDashboard
+            <Layout
               userData={userData} //needed
               setUserData={setUserData} //needed
             />
           }
-          role={["user"]}
+          role={["user","admin"]}
           userData={userData}
         />
       ),
@@ -58,57 +61,69 @@ function App() {
         {
           path: "TakeQuiz",
           element: (
-            <TakeQuiz
-              adminQuestionCollection={adminQuestionCollection} //needed
-              setQuizData={setQuizData} //needed
-              quizData={quizData}
+            <ProtectedRoutes
+              Element={
+                <TakeQuiz
+                  adminQuestionCollection={adminQuestionCollection} //needed
+                  setQuizData={setQuizData} //needed
+                  quizData={quizData}
+                />
+              }
+              role={["user"]}
+              userData={userData}
             />
           ),
         },
         {
           path: "FinalResult",
-          element: <FinalResult />,
-        },
-      ],
-    },
-    {
-      path: "/AdminDashboard",
-      element: (
-        <ProtectedRoutes
-          Element={
-            <AdminDashboard userData={userData} setUserData={setUserData} /> //needed
-          }
-          role={["admin"]}
-          userData={userData} //needed
-        />
-      ),
-      children: [
-        {
-          index: true,
-          element: <Home userData={userData} />, //needed
+          element: (
+            <ProtectedRoutes
+              Element={<FinalResult />}
+              role={["user"]}
+              userData={userData}
+            />
+          ),
         },
         {
           path: "AllQuestionAdmin",
           element: (
-            <AllQuestionAdmin
-              adminQuestionCollection={adminQuestionCollection}//needed
-              userData={userData}//needed
-              setAdminQuestionCollection={setAdminQuestionCollection}//needed
-              quizData={quizData}//needed
+            <ProtectedRoutes
+              Element={
+                <AllQuestionAdmin
+                  adminQuestionCollection={adminQuestionCollection} //needed
+                  userData={userData} //needed
+                  setAdminQuestionCollection={setAdminQuestionCollection} //needed
+                  quizData={quizData} //needed
+                />
+              }
+              role={["admin"]}
+              userData={userData}
             />
           ),
         },
         {
           path: "CreateQuestion",
           element: (
-            <CreateTask
-              setAdminQuestionCollection={setAdminQuestionCollection}//needed
+            <ProtectedRoutes
+              Element={
+                <CreateTask
+                  setAdminQuestionCollection={setAdminQuestionCollection} //needed
+                />
+              }
+              role={["admin"]}
+              userData={userData}
             />
           ),
         },
         {
           path: "AllQuizDetails",
-          element: <AllQuizDetails quizData={quizData} />,//needed
+          element: (
+            <ProtectedRoutes
+              Element={<AllQuizDetails quizData={quizData} />}
+              role={["admin"]}
+              userData={userData}
+            />
+          ), //needed
         },
       ],
     },

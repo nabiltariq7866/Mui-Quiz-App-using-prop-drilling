@@ -19,7 +19,7 @@ const Login = ({setUserData,setUserHistoryData}) => {
         login: true,
       };
       setUserData(loginData);
-      navigate("/AdminDashboard", replace);
+      navigate("/Layout", replace);
     } else {
       loginData = {
         ...data,
@@ -29,7 +29,7 @@ const Login = ({setUserData,setUserHistoryData}) => {
     
 
       setUserData(loginData);
-      navigate("/EmployeeDashboard", replace);
+      navigate("/Layout", replace);
     }
   }
   return (
