@@ -1,16 +1,14 @@
-import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import AppContext from "../../context/AuthContext";
 
-const ProtectedRoutes = ({ role, Element }) => {
-  const context = useContext(AppContext);
-  const auth = context.userData;
 
-  if (!auth.login) {
+const ProtectedRoutes = ({ role, Element,userData }) => {
+  const auth = userData;
+
+  if (!userData.login) {
     return <Navigate to="/" replace />;
   }
 
-  if (auth.login && role.includes(auth.role)) {
+  if (userData.login && role.includes(userData.role)) {
     return Element;
   }
 

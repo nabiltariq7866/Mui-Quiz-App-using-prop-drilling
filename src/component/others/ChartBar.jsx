@@ -1,17 +1,13 @@
-import React, { useContext, useEffect, useState, PureComponent } from "react";
-import AppContext from "../../context/AuthContext";
+import React, {  useEffect, useState, PureComponent } from "react";
+
 import {
   PieChart,
   Pie,
-  Sector,
   Cell,
-  ResponsiveContainer,
   BarChart,
   Bar,
-  CartesianGrid,
   XAxis,
   YAxis,
-  Legend,
   Rectangle,
   LabelList,
 } from "recharts";
@@ -44,8 +40,7 @@ const renderCustomizedLabel = ({
   );
 };
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-const ChartBar = ({ data }) => {
-  const context = useContext(AppContext);
+const ChartBar = ({ data,quizData }) => {
   const [optionCounts, setOptionCounts] = useState({});
   useEffect(() => {
     const countOptions = () => {
@@ -59,10 +54,10 @@ const ChartBar = ({ data }) => {
             };
           });
       }
-
-      context.quizData.forEach((user) => {
+console.log(quizData)
+      quizData.forEach((user) => {
         user.quizzes.forEach((quiz) => {
-          quiz.Questions.forEach((question) => {
+          quiz.questions.forEach((question) => {
             if (question.questionId === data.id) {
               const selectedOption = question.selectedAnswer;
 
@@ -80,10 +75,10 @@ const ChartBar = ({ data }) => {
       setOptionCounts(counts);
     };
 
-    if (context.quizData) {
+    if (quizData) {
       countOptions();
     }
-  }, [context.quizData, data]);
+  }, [quizData, data]);
 
   const chartData = Object.entries(optionCounts).map(([name, value]) => ({
     name,
@@ -91,8 +86,8 @@ const ChartBar = ({ data }) => {
   }));
 
   return (
-    <div className="login-bg p-4">
-      <h3 className="">{data.Question}</h3>
+    <div className="bg-[#359684] rounded-3xl p-4">
+      <h3 className="text-white">{data.Question}</h3>
       <div className="flex items-center ">
         {data.QuestionType === "boolvalue" && (
           <PieChart width={300} height={300}>
@@ -132,7 +127,7 @@ const ChartBar = ({ data }) => {
             <Tooltip />
             <Bar
               dataKey="value"
-              fill="#8884d8"
+              fill="#ffbb28"
               activeBar={<Rectangle fill="pink" stroke="blue" />}
             >
               <LabelList
@@ -151,7 +146,7 @@ const ChartBar = ({ data }) => {
                   className="block w-5 h-5 rounded-full"
                   style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 ></span>
-                <h3>{item.name}</h3>
+                <h3 className="text-white capitalize">{item.name}</h3>
               </div>
             );
           })}

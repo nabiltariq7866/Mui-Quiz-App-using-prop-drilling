@@ -1,8 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
-
-import AppContext from "../../context/AuthContext";
 import QuizIcon from "@mui/icons-material/Quiz";
-
 import Modal from "./Modal";
 import EditAdminQuestion from "./EditAdminQuestion";
 import CreateIcon from "@mui/icons-material/Create";
@@ -20,24 +16,32 @@ const AllTask = ({
   setAnswerSelected,
   setSelectedAnswer,
   selectedAnswer,
+  setEditData,
+  setaddInput,
+  setAdminQuestionCollection,
+  adminQuestionCollection,
+  setCorrectAnswer,
+  correctAnswer,
+  editData,
+  setModal,
+  modal,
 }) => {
-  const [isAnswered, setIsAnswered] = useState(false);
-  const context = useContext(AppContext);
+  let userData = JSON.parse(localStorage.getItem("login")) || {};
   function handleEditfun(data) {
-    context.setEditAddInput(data);
-    context.setaddInput(data.option);
+    console.log("edit");
+    console.log(data);
+    setEditData(data);
     setActiveModal("edit");
-    context.setIsOpen(true);
+    setModal(true);
   }
   function handleDelete(id) {
-    const newADminQuestion = context.adminQuestionCollection.filter(
+    const newADminQuestion = adminQuestionCollection.filter(
       (data) => data.id !== id
     );
-    context.setAdminQuestionCollection(newADminQuestion);
+    setAdminQuestionCollection(newADminQuestion);
   }
-
   const handleAnswerClick = (userAns) => {
-    if (context.userData.role === "user" && !finalResult) {
+    if (userData.role === "user" && !finalResult) {
       const isCorrect = userAns === data.correctAnswer;
       const questionHistory = {
         questionId: data.id,
@@ -49,31 +53,26 @@ const AllTask = ({
         isCorrect,
       };
 
-      if (context.userHistoryIndex !== -1) {
-        const updatedHistory = [...context.userHistoryData];
-        const userEntry = updatedHistory[context.userHistoryIndex];
+      let existingQuizData =
+        JSON.parse(localStorage.getItem("TempDatastore")) || [];
 
-        const questionExists = userEntry.questions?.some(
-          (q) => q.questionId === data.id
-        );
+      const questionIndex = existingQuizData.findIndex(
+        (q) => q.questionId === data.id
+      );
 
-        if (questionExists) {
-          userEntry.questions = userEntry.questions.map((q) =>
-            q.questionId === data.id ? questionHistory : q
-          );
-        } else {
-          userEntry.questions = [...userEntry.questions, questionHistory];
-        }
-
-        context.setUserHistoryData(updatedHistory);
+      if (questionIndex !== -1) {
+        existingQuizData[questionIndex] = questionHistory;
+      } else {
+        existingQuizData.push(questionHistory);
       }
 
-      {
-        setAnswerSelected && setAnswerSelected(true);
-      }
+      localStorage.setItem("TempDatastore", JSON.stringify(existingQuizData));
+
+      setAnswerSelected && setAnswerSelected(true);
       setSelectedAnswer(userAns);
     }
   };
+
   return (
     <div className=" py-5 rounded flex items-start shrink-0 w-[50%] mt-5">
       <div className=" py-2 mb-3 w-full  px-4 mx-3 flex flex-col justify-between rounded">
@@ -82,24 +81,37 @@ const AllTask = ({
             <p className="text-base font-semibold mb-2">
               Question-{index + 1}:
             </p>
-
-            {context.userData.role === "admin" && finalResult !== true && (
+            {userData.role === "admin" && finalResult !== true && (
               <div className="flex w-[20%] justify-evenly">
                 <CreateIcon
                   onClick={() => handleEditfun(data)}
-                  sx={{ color: "#757575" }}
+                  sx={{ color: "#757575", cursor: "pointer" }}
                 />
                 {activeModal === "edit" && (
-                  <Modal>
-                    <EditAdminQuestion />
+                  <Modal
+                    setEditData={setEditData}
+                    editData={editData}
+                    setModal={setModal}
+                    modal={modal}
+                  >
+                    <EditAdminQuestion
+                      data={editData}
+                      setCorrectAnswer={setCorrectAnswer}
+                      correctAnswer={correctAnswer}
+                      adminQuestionCollection={adminQuestionCollection}
+                      setAdminQuestionCollection={setAdminQuestionCollection}
+                      setEditData={setEditData}
+                      setaddInput={setaddInput}
+                      setModal={setModal}
+                    />
                   </Modal>
                 )}
                 <DeleteIcon
                   onClick={() => handleDelete(data.id)}
-                  sx={{ color: "#757575" }}
+                  sx={{ color: "#757575", cursor: "pointer" }}
                 />
                 <PieChartIcon
-                  sx={{ color: "#757575" }}
+                  sx={{ color: "#757575", cursor: "pointer" }}
                   onClick={() => handleChartItem(data)}
                 />
               </div>
@@ -117,8 +129,7 @@ const AllTask = ({
             let backgroundColor = "";
             if (
               finalResult &&
-              (context.userData.role === "user" ||
-                context.userData.role === "admin")
+              (userData.role === "user" || userData.role === "admin")
             ) {
               if (value === data.selectedAnswer) {
                 backgroundColor =
@@ -146,10 +157,10 @@ const AllTask = ({
                   </p>
                   <p className="text-[#0A090B] font-medium">{value}</p>
                 </div>
-                {!finalResult && context.userData.role !== "admin" && (
+                {!finalResult && userData.role !== "admin" && (
                   <label
                     className={`${
-                      context.userData.role === "admin" && finalResult !== true
+                      userData.role === "admin" && finalResult !== true
                         ? "border-2 border-gray-500 w-[90%] mb-2 p-2 rounded-full"
                         : `shrink-0    cursor-pointer mr-4  flex gap-3 mb-2 `
                     } `}

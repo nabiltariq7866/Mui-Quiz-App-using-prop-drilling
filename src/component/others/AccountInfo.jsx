@@ -2,12 +2,11 @@ import * as React from 'react';
 import Logout from '@mui/icons-material/Logout';
 import { Account } from '@toolpad/core/Account';
 import { AuthenticationContext, SessionContext } from '@toolpad/core/AppProvider';
-import AppContext from '../../context/AuthContext';
+
 import { useNavigate } from 'react-router-dom';  // Import useNavigate hook
 
-export default function AccountInfo() {
-  const context = React.useContext(AppContext);
-  let email = context.userData.email;
+export default function AccountInfo({setUserData,userData}) {
+  let email = userData.email;
   let userName = email.split('@')[0];
   userName = userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase();
 
@@ -23,8 +22,8 @@ export default function AccountInfo() {
 
   function handleLogout() {
     // Clear user data and update context/local storage
-    context.setUserData({ login: false });
-    context.setLocalStorage('login', { login: false });
+    setUserData({ login: false });
+    localStorage.setItem('login', JSON.stringify({ login: false }));
     
     // Redirect user to the home page
     navigate('/');  // Navigate to the home page on sign out

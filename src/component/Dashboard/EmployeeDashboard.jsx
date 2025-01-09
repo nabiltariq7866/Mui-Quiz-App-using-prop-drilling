@@ -1,21 +1,17 @@
 import React from "react";
-import Header from "../others/Header";
 import { Outlet } from "react-router-dom";
-import SideNev from "../others/SideNev";
-import Home1 from "../others/Home1";
 import NavBar2 from "../others/NavBar2";
-import { Box } from "@mui/material";
-const EmployeeDashboard = () => {
+const EmployeeDashboard = ({userData,setUserData}) => {
   return (
-    <div>
-      <NavBar2 />
-      <Box sx={{ display: "flex", marginTop: "4rem" }}>
-        <SideNev />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Outlet />
-        </Box>
-      </Box>
+    <div className="py-16 min-h-screen flex flex-col w-[1423px] mt-2 m-auto box-border">
+    <NavBar2 userData={userData} setUserData={setUserData}/>
+    <div  className="bg-white ml-[-6px] mt-3 rounded-3xl w-full box-border px-1 overflow-hidden">
+
+    <div className="w-full  h-[90vh] pr-2 overflow-y-auto box-border px-2 scroll-style">
+      <Outlet />
     </div>
+    </div>
+  </div>
   );
 };
 

@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
-import AppContext from "../../context/AuthContext";
 import { useNavigate, replace } from "react-router-dom";
 import wellcome1 from "../../assets/welcome1.png";
 import login from "../../assets/login.png";
 import { MdAttachEmail } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
-const Login = () => {
-  const context = useContext(AppContext);
+import logo from "../../assets/QuizLogo.png";
+const Login = ({setUserData,setUserHistoryData}) => {
   const navigate = useNavigate();
   function hanldeSubmit(e) {
     e.preventDefault();
@@ -20,7 +18,7 @@ const Login = () => {
         role: "admin",
         login: true,
       };
-      context.setUserData(loginData);
+      setUserData(loginData);
       navigate("/AdminDashboard", replace);
     } else {
       loginData = {
@@ -28,35 +26,29 @@ const Login = () => {
         role: "user",
         login: true,
       };
-      const emailExists = context.userHistoryData.some(
-        (item) => item.email === data.email
-      );
-      if (!emailExists) {
-        context.setUserHistoryData((prev) => [
-          ...prev,
-          { email: data.email, questions: [] },
-        ]);
-      }
+    
 
-      context.setUserData(loginData);
+      setUserData(loginData);
       navigate("/EmployeeDashboard", replace);
     }
-    context.setIsOpen(false);
   }
   return (
+    <div className="py-16 flex items-center justify-center  px-[15rem] min-h-screen bg-[#43b5a0] w-full">
     <div className="shadow-lg w-[60rem] flex items-center h-[35rem] bg-white p-20 rounded-lg">
       <div className="w-1/2 h-full">
         <img src={login} alt="" />
       </div>
-      <div className="w-1/2 h-full flex flex-col items-center mt-[-5rem]">
-        <div className="w-[12rem]">
-          <img src={wellcome1} alt="" />
+      <div className="w-1/2 h-full flex flex-col items-center justify-center mt-[-5rem]">
+        <div className="w-[12rem] flex flex-col items-start justify-center">
+          <img src={wellcome1} alt="" className="w-[8rem] m-auto"/>
+          {/* <h2 className="text-[#43b5a0] m-auto text-3xl font-semibold" >Login to</h2> */}
+          <img src={logo} alt="" className="w-full m-auto" />
         </div>
         <form
           onSubmit={hanldeSubmit}
           className="flex flex-col gap-2 justify-center items-center"
         >
-          <div className="border-[#1976D2] border-2 rounded-full overflow-hidden flex w-full it items-center">
+          <div className="border-[#43b5a0] border-2 rounded-full overflow-hidden flex w-full it items-center">
             <p className="py-3 pl-5 pr-3">
               <MdAttachEmail style={{ color: "#6D7073" }} />
             </p>
@@ -68,7 +60,7 @@ const Login = () => {
               name="email"
             />
           </div>
-          <div className="border-[#1976D2] overflow-hidden border-2 rounded-full flex w-full it items-center">
+          <div className="border-[#43b5a0] overflow-hidden border-2 rounded-full flex w-full it items-center">
             <p className="py-3 pl-5 pr-3">
               <TbLockPassword style={{ color: "#6D7073" }} />
             </p>
@@ -80,11 +72,12 @@ const Login = () => {
               name="password"
             />
           </div>
-          <button className="placeholder:text-white text-xl outline-none  bg-[#1976D2] text-white rounded-full py-3 px-5 w-[180px]">
+          <button className="placeholder:text-white text-xl outline-none  bg-[#43b5a0] text-white rounded-full py-3 px-5 w-[180px]">
             Log in
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

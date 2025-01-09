@@ -1,11 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import QuestionOption from "./QuestionOption";
 import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
-import AppContext from "../../context/AuthContext";
-const CreateTask = () => {
+const CreateTask = ({
+  setAdminQuestionCollection,
+}) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const context = useContext(AppContext);
-
+  const [addInput, setAddInput] = useState([]);
+  const [correctAnswer, setCorrectAnswer] = useState(null);
   function handleSelectedAnswer(e) {
     setSelectedAnswer(e.target.value);
   }
@@ -15,27 +16,28 @@ const CreateTask = () => {
     const formData = new FormData(e.target);
     let option = formData.getAll("option");
     let data = Object.fromEntries(formData.entries());
-    context.setCorrectAnswer(option[context.correctAnswer]);
-    let correctAnswer;
+    setCorrectAnswer(option[correctAnswer]);
+    let correctAnswertemp;
     {
       data.QuestionType === "boolvalue"
-        ? (correctAnswer = context.correctAnswer)
-        : (correctAnswer = option[context.correctAnswer]);
+        ? (correctAnswertemp = correctAnswer)
+        : (correctAnswertemp = option[correctAnswer]);
     }
 
     data = {
       ...data,
       id: Date.now(),
       option,
-      correctAnswer,
+      correctAnswer:correctAnswertemp,
     };
-    context.setAdminQuestionCollection((prev) => [...prev, data]);
-    context.setaddInput([""]);
+    console.log(data)
+    setAdminQuestionCollection((prev) => [...prev, data]);
+    setAddInput([]);
     form.reset();
   }
   return (
     <div>
-      <div className="p-5 bg-[#3B8AD9] m-auto mt-7 w-1/2 rounded">
+      <div className="p-5 bg-[#43b5a0] m-auto mt-7 w-1/2 rounded">
         <form
           onSubmit={handleSubmitQuestinAdmin}
           className="flex flex-wrap w-full items-start justify-between "
@@ -47,7 +49,7 @@ const CreateTask = () => {
               </h3>
               <input
                 name="Question"
-                className="text-2xl py-1 px-2 w-full text-white rounded outline-none bg-transparent  border-[1px] border-white  mb-4 placeholder:text-[#89B9E8] placeholder:text-base"
+                className="text-2xl py-1 px-2 w-full text-white rounded outline-none bg-transparent  border-[1px] border-white  mb-4 placeholder:text-[#11111131] placeholder:text-base"
                 type="text"
                 placeholder="Put Question here..."
                 required
@@ -79,8 +81,17 @@ const CreateTask = () => {
                 </label>
               </div>
             </div>
-            {selectedAnswer === "boolvalue" && <QuestionOptionTureFalse />}
-            {selectedAnswer === "mcqs" && <QuestionOption />}
+            {selectedAnswer === "boolvalue" && (
+              <QuestionOptionTureFalse setCorrectAnswer={setCorrectAnswer}/>
+            )}
+            {selectedAnswer === "mcqs" && (
+              <QuestionOption
+              setAddInput={setAddInput}
+                setCorrectAnswer={setCorrectAnswer}
+                addInput={addInput}
+                correctAnswer={correctAnswer}
+              />
+            )}
             <button className="bg-white py-3  px-5 mx-auto rounded text-sm mt-4">
               Create Question
             </button>

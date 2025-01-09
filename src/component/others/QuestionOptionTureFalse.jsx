@@ -1,13 +1,10 @@
-import React, { useContext } from "react";
-import AppContext from "../../context/AuthContext";
 
-const QuestionOptionTureFalse = () => {
-  const context = useContext(AppContext);
+const QuestionOptionTureFalse = ({setCorrectAnswer}) => {
   function handleCorrectAnswerChange(e) {
-    context.setCorrectAnswer(e.target.value);
+    setCorrectAnswer(e.target.value);
   }
   return (
-    <div className="bg-[#1976D2] w-1/3 p-2 rounded-md  flex flex-col mt-3 gap-3">
+    <div className="bg-[#328a7a] w-1/2 p-2 rounded-md  flex flex-col mt-3 gap-3">
       <div className="flex justify-between">
         <h1 className="text-xl font-semibold text-white bggre">Option</h1>
         <h1 className="text-xl text-white font-semibold bggre">Select</h1>

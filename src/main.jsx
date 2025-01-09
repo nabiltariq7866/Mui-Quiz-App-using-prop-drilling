@@ -6,8 +6,6 @@ import { AuthContext } from "./context/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthContext>
-      <App/>
-    </AuthContext>
+    <App />
   </StrictMode>
 );

@@ -6,20 +6,25 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import AppContext from "../../context/AuthContext";
 import { Account } from "@toolpad/core/Account";
-
+import logo from "../../assets/QuizLogo.png";
 import Logout from "@mui/icons-material/Logout";
 import AccountInfo from "./AccountInfo";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import { useNavigate, useLocation } from "react-router-dom";
+import QuizIcon from "@mui/icons-material/Quiz";
+import HomeIcon from "@mui/icons-material/Home";
+import BackupTableIcon from "@mui/icons-material/BackupTable";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
+import ManageHistoryOutlinedIcon from "@mui/icons-material/ManageHistoryOutlined";
+
 const AppBar = styled(
   MuiAppBar,
   {}
@@ -66,10 +71,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function NavBar2() {
-  const context = React.useContext(AppContext);
+export default function NavBar2({userData,setUserData}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
+
+  const location = useLocation(); // Get current route
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -130,26 +140,6 @@ export default function NavBar2() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
       <Account
         slotProps={{
           signInButton: {
@@ -177,72 +167,123 @@ export default function NavBar2() {
       />
     </Menu>
   );
+  const adminLinks = [
+    { text: "Home", icon: <HomeIcon />, route: "/AdminDashboard" },
+    {
+      text: "All Question",
+      icon: <QuizIcon />,
+      route: "/AdminDashboard/AllQuestionAdmin",
+    },
+    {
+      text: "Add Question",
+      icon: <LibraryAddIcon />,
+      route: "/AdminDashboard/CreateQuestion",
+    },
+    {
+      text: "All Result",
+      icon: <ManageHistoryOutlinedIcon />,
+      route: "/AdminDashboard/AllQuizDetails",
+    },
+  ];
 
+  const employeeLinks = [
+    { text: "Home", icon: <HomeIcon />, route: "/EmployeeDashboard" },
+    {
+      text: "Take Quiz",
+      icon: <QuizIcon />,
+      route: "/EmployeeDashboard/TakeQuiz",
+    },
+    {
+      text: "Final Result",
+      icon: <BackupTableIcon />,
+      route: "/EmployeeDashboard/FinalResult",
+    },
+  ];
+
+  const renderNavLinks = (links) => {
+    return links.map(({ text, icon, route }) => (
+      <ListItem
+        disablePadding
+        key={text}
+        sx={[
+          {
+            display: "flex",
+            borderRadius: "9999px",
+            alignItems:"center",
+            justifyContent:"center",
+            width: "230px",
+            height: "40px",
+          },
+          isActive(route)
+            ? { backgroundColor: "#43b5a0", color: "white" }
+            : { backgroundColor: "transparent", color: "#43b5a0" },
+        ]}
+        onClick={() => navigate(route)}
+      >
+        <ListItemButton sx={{display:"flex",gap:"2px"}}>
+          <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
+            {icon}
+          </ListItemIcon>
+          <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </ListItem>
+    ));
+  };
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+    <Box>
+      <AppBar
+        position="fixed"
+        sx={{
+          background: "white",
+          width: "1423px",
+          left: "12.7%",
+          borderRadius: "1.5rem",
+          top: "1%",
+        }}
+      >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={() => context.setNavOpen(!context.navOpen)}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
+            sx={{ display: { xs: "none", sm: "block" ,width:"280px" } }}
           >
-            <div className="flex items-center  justify-center px-4 content-div py-2 z-10 shadow-md">
-              <p className="w-[30px] h-[30px] bg-[#479EFF] rounded-full flex items-center justify-center text-white font-semibold">
-                Q
-              </p>
-              <p className="w-[30px] h-[30px] bg-[#FFCA00] ml-[-5px] mt-[10px] rounded-full flex items-center justify-center text-white font-semibold">
-                U
-              </p>
-              <p className="w-[30px] h-[30px] bg-[#FF0F02] rounded-full flex ml-[-7px] mt-[-10px] items-center justify-center text-white font-semibold">
-                I
-              </p>
-              <p className="w-[30px] h-[30px] bg-[#AECE00] rounded-full flex ml-[-7px] mt-[13px] items-center justify-center text-white font-semibold">
-                Z
-              </p>
-            </div>
+            <img src={logo} alt />
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              aria-label="show 4 new mails"
-              color="inherit"
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
             >
-              <Badge badgeContent={4} color="error">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              size="large"
-              aria-label="show 17 new notifications"
-              color="inherit"
-            >
-              <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <AccountInfo />
+              <List
+                sx={{
+                  display: "flex",
+                  width: "70%",
+                  gap: "1rem",
+                }}
+              >
+                {userData.role === "admin"
+                  ? renderNavLinks(adminLinks)
+                  : renderNavLinks(employeeLinks)}
+              </List>
+            </Box>
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" }, color: "#43b5a0" }}>
+            <AccountInfo setUserData={setUserData} userData={userData}/>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
