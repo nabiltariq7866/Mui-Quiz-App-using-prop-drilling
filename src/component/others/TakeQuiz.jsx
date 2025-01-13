@@ -13,8 +13,8 @@ const TakeQuiz = ({
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const navigate = useNavigate();
   const sortedData = [...adminQuestionCollection].sort((a, b) => {
-    if (a.QuestionType === "mcqs" && b.QuestionType !== "mcqs") return -1;
-    if (a.QuestionType !== "mcqs" && b.QuestionType === "mcqs") return 1;
+    if (a.QuestionType === "MCQSQuestions" && b.QuestionType !== "MCQSQuestions") return -1;
+    if (a.QuestionType !== "MCQSQuestions" && b.QuestionType === "MCQSQuestions") return 1;
     return 0;
   });
   console.log(sortedData)

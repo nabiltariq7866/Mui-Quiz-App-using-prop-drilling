@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import QuestionOption from "./QuestionOption";
 import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
-const CreateTask = ({
-  setAdminQuestionCollection,
-}) => {
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [addInput, setAddInput] = useState([]);
+const CreateTask = ({ setAdminQuestionCollection }) => {
+  const [selectedAnswer, setSelectedAnswer] = useState({
+    MCQSQuestions: false,
+    TFQuestion: false,
+  });
+  const [addInput, setAddInput] = useState([""]);
   const [correctAnswer, setCorrectAnswer] = useState(null);
   function handleSelectedAnswer(e) {
-    setSelectedAnswer(e.target.value);
+    const key = e.target.value;
+    console.log(key);
+    setSelectedAnswer({
+      MCQSQuestions: key === "MCQSQuestions",
+      TFQuestion: key === "TFQuestion",
+    });
   }
   function handleSubmitQuestinAdmin(e) {
     e.preventDefault();
@@ -19,7 +25,7 @@ const CreateTask = ({
     setCorrectAnswer(option[correctAnswer]);
     let correctAnswertemp;
     {
-      data.QuestionType === "boolvalue"
+      data.QuestionType === "TFQuestion"
         ? (correctAnswertemp = correctAnswer)
         : (correctAnswertemp = option[correctAnswer]);
     }
@@ -28,11 +34,11 @@ const CreateTask = ({
       ...data,
       id: Date.now(),
       option,
-      correctAnswer:correctAnswertemp,
+      correctAnswer: correctAnswertemp,
     };
-    console.log(data)
+    console.log(data);
     setAdminQuestionCollection((prev) => [...prev, data]);
-    setAddInput([]);
+    setAddInput([""]);
     form.reset();
   }
   return (
@@ -59,9 +65,9 @@ const CreateTask = ({
                   <input
                     className="mr-2"
                     type="radio"
-                    value="boolvalue"
+                    value="TFQuestion"
                     name="QuestionType"
-                    checked={selectedAnswer === "boolvalue"}
+                    checked={selectedAnswer.TFQuestion === true}
                     onChange={handleSelectedAnswer}
                     required
                   />
@@ -71,9 +77,9 @@ const CreateTask = ({
                   <input
                     className="mr-2"
                     type="radio"
-                    value="mcqs"
+                    value="MCQSQuestions"
                     name="QuestionType"
-                    checked={selectedAnswer === "mcqs"}
+                    checked={selectedAnswer.MCQSQuestions === true}
                     onChange={handleSelectedAnswer}
                     required
                   />
@@ -81,12 +87,12 @@ const CreateTask = ({
                 </label>
               </div>
             </div>
-            {selectedAnswer === "boolvalue" && (
-              <QuestionOptionTureFalse setCorrectAnswer={setCorrectAnswer}/>
+            {selectedAnswer.TFQuestion && (
+              <QuestionOptionTureFalse setCorrectAnswer={setCorrectAnswer} />
             )}
-            {selectedAnswer === "mcqs" && (
+            {selectedAnswer.MCQSQuestions && (
               <QuestionOption
-              setAddInput={setAddInput}
+                setAddInput={setAddInput}
                 setCorrectAnswer={setCorrectAnswer}
                 addInput={addInput}
                 correctAnswer={correctAnswer}

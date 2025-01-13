@@ -99,8 +99,8 @@ const EditAdminQuestion = ({
               {console.log(editAddInput)}
             </div>
 
-            {data?.QuestionType === "boolvalue" && <QuestionOptionTureFalse />}
-            {data?.QuestionType === "mcqs" && (
+            {data?.QuestionType === "TFQuestion" && <QuestionOptionTureFalse />}
+            {data?.QuestionType === "MCQSQuestions" && (
               <QuestionOption
                 data={data}
                 edit={true}
