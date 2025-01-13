@@ -6,7 +6,7 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
     MCQSQuestions: false,
     TFQuestion: false,//convicing
   });
-  const [addInput, setAddInput] = useState([""]);
+  const [addInput, setAddInput] = useState([""]); // [ { option : '', isCorrect: false } ]
   const [correctAnswer, setCorrectAnswer] = useState(null);
   function handleSelectedAnswer(e) {
     const key = e.target.value;
