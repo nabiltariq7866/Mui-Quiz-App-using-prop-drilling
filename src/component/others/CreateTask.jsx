@@ -13,7 +13,7 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
     console.log(key);
     setSelectedAnswer({
       MCQSQuestions: key === "MCQSQuestions",
-      TFQuestion: key === "TFQuestion",
+      TFQuestion: key === "TFQuestion",//new changes
     });
   }
   function handleSubmitQuestinAdmin(e) {
