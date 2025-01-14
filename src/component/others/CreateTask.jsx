@@ -2,44 +2,41 @@ import React, { useState } from "react";
 import QuestionOption from "./QuestionOption";
 import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
 const CreateTask = ({ setAdminQuestionCollection }) => {
-  const [selectedAnswer, setSelectedAnswer] = useState({
+  const [questionType, setQuestionType] = useState({
     MCQSQuestions: false,
-    TFQuestion: false,//convicing
+    TFQuestion: false, //convicing
   });
-  const [addInput, setAddInput] = useState([""]); // [ { option : '', isCorrect: false } ]
-  const [correctAnswer, setCorrectAnswer] = useState(null);
-  function handleSelectedAnswer(e) {
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState({ option: [""], isCorrect: false });
+  function handleQuestionType(e) {
     const key = e.target.value;
     console.log(key);
-    setSelectedAnswer({
+    setQuestionType({
       MCQSQuestions: key === "MCQSQuestions",
-      TFQuestion: key === "TFQuestion",//new changes
+      TFQuestion: key === "TFQuestion", //new changes
     });
   }
   function handleSubmitQuestinAdmin(e) {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(e.target);
-    let option = formData.getAll("option");
-    let data = Object.fromEntries(formData.entries());
-    setCorrectAnswer(option[correctAnswer]);
-    let correctAnswertemp;
-    {
-      data.QuestionType === "TFQuestion"
-        ? (correctAnswertemp = correctAnswer)
-        : (correctAnswertemp = option[correctAnswer]);
-    }
-
-    data = {
-      ...data,
+    let qusType = "";
+    questionType.MCQSQuestions
+      ? (qusType = "MCQSQuestions")
+      : (qusType = "TFQuestion");
+    let data = {
       id: Date.now(),
-      option,
-      correctAnswer: correctAnswertemp,
+      Question: question,
+      option: options.option,
+      correctAnswer: options.isCorrect,
+      QuestionType: qusType,
     };
     console.log(data);
     setAdminQuestionCollection((prev) => [...prev, data]);
-    setAddInput([""]);
-    form.reset();
+    setQuestionType({
+      MCQSQuestions: false,
+      TFQuestion: false,
+    });
+    setOptions({ option: [" "], isCorrect: false });
+    setQuestion("");
   }
   return (
     <div>
@@ -57,6 +54,8 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
                 name="Question"
                 className="text-2xl py-1 px-2 w-full text-white rounded outline-none bg-transparent  border-[1px] border-white  mb-4 placeholder:text-[#11111131] placeholder:text-base"
                 type="text"
+                value={question} // Two-way binding
+                onChange={(e) => setQuestion(e.target.value)} // Handle change
                 placeholder="Put Question here..."
                 required
               />
@@ -67,8 +66,8 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
                     type="radio"
                     value="TFQuestion"
                     name="QuestionType"
-                    checked={selectedAnswer.TFQuestion === true}
-                    onChange={handleSelectedAnswer}
+                    checked={questionType.TFQuestion === true}
+                    onChange={handleQuestionType}
                     required
                   />
                   True/false
@@ -79,24 +78,19 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
                     type="radio"
                     value="MCQSQuestions"
                     name="QuestionType"
-                    checked={selectedAnswer.MCQSQuestions === true}
-                    onChange={handleSelectedAnswer}
+                    checked={questionType.MCQSQuestions === true}
+                    onChange={handleQuestionType}
                     required
                   />
                   Mcqs
                 </label>
               </div>
             </div>
-            {selectedAnswer.TFQuestion && (
-              <QuestionOptionTureFalse setCorrectAnswer={setCorrectAnswer} />
+            {questionType.TFQuestion && (
+              <QuestionOptionTureFalse setOptions={setOptions} />
             )}
-            {selectedAnswer.MCQSQuestions && (
-              <QuestionOption
-                setAddInput={setAddInput}
-                setCorrectAnswer={setCorrectAnswer}
-                addInput={addInput}
-                correctAnswer={correctAnswer}
-              />
+            {questionType.MCQSQuestions && (
+              <QuestionOption setOptions={setOptions} options={options} />
             )}
             <button className="bg-white py-3  px-5 mx-auto rounded text-sm mt-4">
               Create Question

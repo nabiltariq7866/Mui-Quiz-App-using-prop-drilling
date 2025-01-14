@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import EmployeeDashboard from "./component/Dashboard/EmployeeDashboard";
-import AdminDashboard from "./component/Dashboard/AdminDashboard";
 import ProtectedRoutes from "./component/Auth/ProtectedRoutes";
 import Home from "./component/others/Home";
 import AllQuestionAdmin from "./component/others/AllQuestionAdmin";

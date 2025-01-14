@@ -1,7 +1,7 @@
 
-const QuestionOptionTureFalse = ({setCorrectAnswer}) => {
+const QuestionOptionTureFalse = ({setOptions}) => {
   function handleCorrectAnswerChange(e) {
-    setCorrectAnswer(e.target.value);
+    setOptions({ option:["true","false"], isCorrect:e.target.value  });
   }
   return (
     <div className="bg-[#328a7a] w-1/2 p-2 rounded-md  flex flex-col mt-3 gap-3">

@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 
 const QuestionOption = ({
   data,
-  setCorrectAnswer,
-  correctAnswer,
-  setAddInput,
-  addInput
+  setOptions,
+  options
 }) => {
-  const [localCorrectAnswer, setLocalCorrectAnswer] = useState(
-    data ? data.correctAnswer : null
-  );
-console.log(data)
+  console.log(data);
   useEffect(() => {
     if (data && data.option) {
       const correctIndex = data.option.indexOf(data.correctAnswer);
@@ -19,28 +14,27 @@ console.log(data)
   }, [data]);
 
   function handlePlusButton() {
-    setAddInput((prev) => [...prev, ""]);
+    console.log("click")
+    setOptions((prev) => ({
+      ...prev, 
+      option: [...prev.option, ""]   }));
   }
 
   function handleDeleteOption(index) {
-    const newAddInput = addInput.filter((_, i) => i !== index);
-    setAddInput(newAddInput);
-    if (index === correctAnswer) {
-      setCorrectAnswer(null);
-    } else if (index < correctAnswer) {
-      setCorrectAnswer((prev) => (prev > 0 ? prev - 1 : 0));
-    }
+    const newOptions = options.option.filter((_, i) => i !== index);
+    setOptions((prev) => ({ ...prev, option: newOptions }));
   }
 
   function handleOptionChange(e, index) {
-    const newAddInput = [...addInput];
-    newAddInput[index] = e.target.value;
-    setAddInput(newAddInput);
+    const updatedOption = e.target.value;
+    const newOptions = [...options.option];
+    newOptions[index] = updatedOption; 
+    setOptions((prev) => ({ ...prev, option: newOptions }));
   }
 
-  function handleCorrectAnswerChange(index) {
-    setLocalCorrectAnswer(index);
-    setCorrectAnswer(index);
+  function handleCorrectAnswerChange(correct) {
+    console.log(correct)
+    setOptions((prev) => ({ ...prev, isCorrect:correct  }));
   }
 
   return (
@@ -55,7 +49,7 @@ console.log(data)
         </button>
       </div>
 
-      {addInput.map((item, index) => (
+      {options.option.map((item, index) => (
         <div
           className="flex text-white gap-3 mb-2 items-center justify-center"
           key={index}
@@ -74,9 +68,9 @@ console.log(data)
             <input
               type="radio"
               name="correctAnswer"
-              value={index}
-              checked={localCorrectAnswer === index}
-              onChange={() => handleCorrectAnswerChange(index)}
+              value={item}
+              checked={options.isCorrect === item}
+              onChange={() => handleCorrectAnswerChange(item)}
               className="ml-2"
               required
             />
