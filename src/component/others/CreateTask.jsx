@@ -4,29 +4,34 @@ import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
 const CreateTask = ({ setAdminQuestionCollection }) => {
   const [questionType, setQuestionType] = useState({
     MCQSQuestions: false,
-    TFQuestion: false, //convicing
+    TFQuestion: false, 
   });
   const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState({ option: [""], isCorrect: false });
+  const [options, setOptions] = useState([{ option: "", isCorrect: false }]);
   function handleQuestionType(e) {
     const key = e.target.value;
     console.log(key);
     setQuestionType({
       MCQSQuestions: key === "MCQSQuestions",
-      TFQuestion: key === "TFQuestion", //new changes
+      TFQuestion: key === "TFQuestion", 
     });
   }
   function handleSubmitQuestinAdmin(e) {
     e.preventDefault();
-    let qusType = "";
-    questionType.MCQSQuestions
-      ? (qusType = "MCQSQuestions")
-      : (qusType = "TFQuestion");
-    let data = {
+    let qusType = questionType.MCQSQuestions ? "MCQSQuestions" : "TFQuestion";
+    let correctAnswer;
+    const optionData = options.map(option =>{ 
+      if(option.isCorrect){
+        option
+        correctAnswer=option.option;
+      }
+    return  option.option
+    });
+    const data = {
       id: Date.now(),
       Question: question,
-      option: options.option,
-      correctAnswer: options.isCorrect,
+      options: optionData, 
+      correctAnswer: correctAnswer, 
       QuestionType: qusType,
     };
     console.log(data);
@@ -35,7 +40,7 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
       MCQSQuestions: false,
       TFQuestion: false,
     });
-    setOptions({ option: [" "], isCorrect: false });
+    setOptions([{ option: "", isCorrect: false }]);
     setQuestion("");
   }
   return (

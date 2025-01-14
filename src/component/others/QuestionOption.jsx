@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-
-const QuestionOption = ({
-  data,
-  setOptions,
-  options
-}) => {
-  console.log(data);
+import Checkbox from "@mui/material/Checkbox";
+const QuestionOption = ({ data, setOptions, options }) => {
+  // console.log(data);
   useEffect(() => {
     if (data && data.option) {
       const correctIndex = data.option.indexOf(data.correctAnswer);
@@ -14,27 +10,28 @@ const QuestionOption = ({
   }, [data]);
 
   function handlePlusButton() {
-    console.log("click")
-    setOptions((prev) => ({
-      ...prev, 
-      option: [...prev.option, ""]   }));
+    setOptions((prev) => [...prev, { option: "", isCorrect: false }]);
   }
 
   function handleDeleteOption(index) {
-    const newOptions = options.option.filter((_, i) => i !== index);
-    setOptions((prev) => ({ ...prev, option: newOptions }));
+    const newOptions = options.filter((_, i) => i !== index);
+    setOptions(newOptions);
   }
 
   function handleOptionChange(e, index) {
     const updatedOption = e.target.value;
-    const newOptions = [...options.option];
-    newOptions[index] = updatedOption; 
-    setOptions((prev) => ({ ...prev, option: newOptions }));
+    const newOptions = [...options];
+    newOptions[index].option = updatedOption;
+    setOptions(newOptions);
   }
 
-  function handleCorrectAnswerChange(correct) {
-    console.log(correct)
-    setOptions((prev) => ({ ...prev, isCorrect:correct  }));
+  function handleCorrectAnswerChange(index) {
+    setOptions((prevOptions) =>
+      prevOptions.map((option, i) => ({
+        ...option,
+        isCorrect: i === index,
+      }))
+    );
   }
 
   return (
@@ -49,7 +46,7 @@ const QuestionOption = ({
         </button>
       </div>
 
-      {options.option.map((item, index) => (
+      {options.map((item, index) => (
         <div
           className="flex text-white gap-3 mb-2 items-center justify-center"
           key={index}
@@ -57,7 +54,7 @@ const QuestionOption = ({
           <p>{index + 1}</p>
           <input
             type="text"
-            value={item || ""}
+            value={item.option || ""}
             name="option"
             onChange={(e) => handleOptionChange(e, index)}
             className="bg-[#43b5a0] placeholder:text-[#11111131] w-3/4 p-2 rounded-md outline-none"
@@ -65,14 +62,10 @@ const QuestionOption = ({
             required
           />
           <label className="flex items-center justify-center gap-2">
-            <input
-              type="radio"
-              name="correctAnswer"
-              value={item}
-              checked={options.isCorrect === item}
-              onChange={() => handleCorrectAnswerChange(item)}
-              className="ml-2"
-              required
+            <Checkbox
+              checked={item.isCorrect}
+              onChange={() => handleCorrectAnswerChange(index)}
+              color="pink"
             />
             Correct
           </label>
