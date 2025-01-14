@@ -40,7 +40,7 @@ const TakeQuiz = ({
     temp.forEach((question) => {
       let questionScore = 0;
       if (question.isCorrect) {
-        questionScore = question.QuestionType === "mcqs" ? 10 : 5;
+        questionScore = question.QuestionType === "MCQSQuestions" ? 10 : 5;
       }
       totalScore += questionScore;
     });
