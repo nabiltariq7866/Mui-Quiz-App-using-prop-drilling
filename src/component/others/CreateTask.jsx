@@ -7,7 +7,7 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
     TFQuestion: false, 
   });
   const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState([{ option: "", isCorrect: false }]);
+  const [options, setOptions] = useState([{id:Date.now(), option: "", isCorrect: false }]);
   function handleQuestionType(e) {
     const key = e.target.value;
     console.log(key);
@@ -30,7 +30,7 @@ const CreateTask = ({ setAdminQuestionCollection }) => {
     const data = {
       id: Date.now(),
       Question: question,
-      options: optionData, 
+      option: optionData, 
       correctAnswer: correctAnswer, 
       QuestionType: qusType,
     };

@@ -10,26 +10,28 @@ const QuestionOption = ({ data, setOptions, options }) => {
   }, [data]);
 
   function handlePlusButton() {
-    setOptions((prev) => [...prev, { option: "", isCorrect: false }]);
+    setOptions((prev) => [...prev, {id:Date.now(), option: "", isCorrect: false }]);
   }
 
-  function handleDeleteOption(index) {
-    const newOptions = options.filter((_, i) => i !== index);
+  function handleDeleteOption(id) {
+    const newOptions = options.filter((item) => item.id !== id);
     setOptions(newOptions);
   }
 
-  function handleOptionChange(e, index) {
+  function handleOptionChange(e,id) {
     const updatedOption = e.target.value;
-    const newOptions = [...options];
-    newOptions[index].option = updatedOption;
-    setOptions(newOptions);
+    setOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === id ? { ...option, option: updatedOption } : option
+      )
+    );
   }
 
-  function handleCorrectAnswerChange(index) {
+  function handleCorrectAnswerChange(id) {
     setOptions((prevOptions) =>
-      prevOptions.map((option, i) => ({
+      prevOptions.map((option) => ({
         ...option,
-        isCorrect: i === index,
+        isCorrect: option.id === id,
       }))
     );
   }
@@ -56,7 +58,7 @@ const QuestionOption = ({ data, setOptions, options }) => {
             type="text"
             value={item.option || ""}
             name="option"
-            onChange={(e) => handleOptionChange(e, index)}
+            onChange={(e) => handleOptionChange(e, item.id)}
             className="bg-[#43b5a0] placeholder:text-[#11111131] w-3/4 p-2 rounded-md outline-none"
             placeholder="Question option..."
             required
@@ -64,7 +66,7 @@ const QuestionOption = ({ data, setOptions, options }) => {
           <label className="flex items-center justify-center gap-2">
             <Checkbox
               checked={item.isCorrect}
-              onChange={() => handleCorrectAnswerChange(index)}
+              onChange={() => handleCorrectAnswerChange(item.id)}
               color="pink"
             />
             Correct
@@ -72,7 +74,7 @@ const QuestionOption = ({ data, setOptions, options }) => {
           <button
             type="button"
             className="bg-white text-[#43b5a0] h-[25px] px-1 rounded-sm text-[12px] leading-none"
-            onClick={() => handleDeleteOption(index)}
+            onClick={() => handleDeleteOption(item.id)}
           >
             Delete
           </button>
