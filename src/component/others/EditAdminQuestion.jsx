@@ -2,36 +2,34 @@ import { useEffect, useState } from "react";
 import QuestionOption from "./QuestionOption";
 import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
 
-const EditAdminQuestion = ({
-  adminQuestionCollection,
-  setAdminQuestionCollection,
-  setModal,
-  data,
-}) => {
+const EditAdminQuestion = ({ adminQuestionCollection,setAdminQuestionCollection,setModal, data }) => {
   console.log("edit modal");
   console.log(data);
-  const [editAddInput, setEditAddInput] = useState(data?.Question || []); // For Question
-  console.log(editAddInput)
-  const [changeAns, setChangeAns] = useState();
-  const [addInput, setAddInput] = useState(data?.option || []); // For Options
-  console.log(addInput)
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState([]);
+  console.log(options);
   useEffect(() => {
+    setOptions([]);
     if (data && data.option) {
-      setEditAddInput(data?.Question )
-      setAddInput(data?.option)
+      const formattedOptions = data.option.map((item) => ({
+        id: Date.now() + Math.random(),
+        option: item,
+        isCorrect: item === data.correctAnswer,
+      }));
+
+      setOptions((prev) => {
+        const existingOptions = prev.map((opt) => JSON.stringify(opt));
+        const newOptions = formattedOptions.filter(
+          (opt) => !existingOptions.includes(JSON.stringify(opt))
+        );
+        return [...prev, ...newOptions];
+      });
     }
+    setQuestion(data.Question);
   }, [data]);
 
-  // Handle input changes for question
   const handleQuestionChange = (e) => {
-    setEditAddInput(e.target.value);
-  };
-
-  // Handle changes for options (used for MCQs)
-  const handleOptionChange = (index, e) => {
-    const updatedOptions = [...addInput];
-    updatedOptions[index] = e.target.value;
-    setAddInput(updatedOptions);
+    setQuestion(e.target.value);
   };
 
   function handleSubmitQuestionAdmin(e) {
@@ -45,10 +43,14 @@ const EditAdminQuestion = ({
     let editData = Object.fromEntries(formData.entries());
 
     let correctAnswertemp;
-    if (data.QuestionType === "boolvalue") {
+    if (data.QuestionType === "TFQuestion") {
       correctAnswertemp = editData.correctAnswer;
     } else {
-      correctAnswertemp = option[editData.correctAnswer];
+      options.map((item) => {
+        if (item.isCorrect) {
+          correctAnswertemp = item.option;
+        }
+      });
     }
     editData = {
       ...data,
@@ -56,7 +58,7 @@ const EditAdminQuestion = ({
       correctAnswer: correctAnswertemp,
       option: option,
     };
-
+    console.log(editData);
     const updatedQuestions = adminQuestionCollection.map((dataPass) => {
       if (editData.id === dataPass.id) {
         return editData;
@@ -65,11 +67,8 @@ const EditAdminQuestion = ({
     });
 
     setAdminQuestionCollection(updatedQuestions);
-    // Optionally update the localStorage here
-    // Clear form inputs and reset modal
-    // setEditAddInput("");
-    setEditAddInput("");
-    setAddInput([]);
+    setOptions([]);
+    setQuestion("")
     localStorage.setItem("modalOpen", JSON.stringify(false));
     setModal(false);
     form.reset();
@@ -90,24 +89,21 @@ const EditAdminQuestion = ({
               <input
                 name="Question"
                 className="text-2xl py-1 px-2 w-full rounded outline-none bg-transparent border-[1px] border-t-gray-400 border-gray-400 mb-4"
-                value={editAddInput} // Two-way binding
+                value={question} // Two-way binding
                 onChange={handleQuestionChange} // Update state on input change
                 type="text"
                 placeholder="Update Question .."
                 required
               />
-              {console.log(editAddInput)}
             </div>
 
             {data?.QuestionType === "TFQuestion" && <QuestionOptionTureFalse />}
             {data?.QuestionType === "MCQSQuestions" && (
               <QuestionOption
+                setOptions={setOptions}
+                options={options}
                 data={data}
-                edit={true}
-                setChangeAns={setChangeAns}
-                addInput={addInput}
-                setAddInput={setAddInput}
-                handleOptionChange={handleOptionChange} // Pass the handler
+                isEdit={true}
               />
             )}
 

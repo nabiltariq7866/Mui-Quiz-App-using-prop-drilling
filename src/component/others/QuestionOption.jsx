@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
-const QuestionOption = ({ data, setOptions, options }) => {
-  // console.log(data);
-  useEffect(() => {
-    if (data && data.option) {
-      const correctIndex = data.option.indexOf(data.correctAnswer);
-      setLocalCorrectAnswer(correctIndex);
-    }
-  }, [data]);
+const QuestionOption = ({  setOptions, options }) => {
+  // console.log();
+  
 
   function handlePlusButton() {
     setOptions((prev) => [...prev, {id:Date.now(), option: "", isCorrect: false }]);
@@ -28,6 +23,7 @@ const QuestionOption = ({ data, setOptions, options }) => {
   }
 
   function handleCorrectAnswerChange(id) {
+    console.log(id)
     setOptions((prevOptions) =>
       prevOptions.map((option) => ({
         ...option,

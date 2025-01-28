@@ -1,4 +1,4 @@
-import React, {  useEffect, useState, PureComponent } from "react";
+import React, { useEffect, useState, PureComponent } from "react";
 
 import {
   PieChart,
@@ -40,7 +40,8 @@ const renderCustomizedLabel = ({
   );
 };
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
-const ChartBar = ({ data,quizData }) => {
+const ChartBar = ({ data, quizData }) => {
+  console.log(quizData);
   const [optionCounts, setOptionCounts] = useState({});
   useEffect(() => {
     const countOptions = () => {
@@ -54,7 +55,7 @@ const ChartBar = ({ data,quizData }) => {
             };
           });
       }
-console.log(quizData)
+      console.log(quizData);
       quizData.forEach((user) => {
         user.quizzes.forEach((quiz) => {
           quiz.questions.forEach((question) => {
@@ -89,7 +90,7 @@ console.log(quizData)
     <div className="bg-[#359684] rounded-3xl p-4">
       <h3 className="text-white">{data.Question}</h3>
       <div className="flex items-center ">
-        {data.QuestionType === "boolvalue" && (
+        {data.QuestionType === "TFQuestion" && (
           <PieChart width={300} height={300}>
             <Pie
               data={chartData}
@@ -110,7 +111,7 @@ console.log(quizData)
             </Pie>
           </PieChart>
         )}
-        {data.QuestionType === "mcqs" && (
+        {data.QuestionType === "MCQSQuestions" && (
           <BarChart
             width={900}
             height={500}
