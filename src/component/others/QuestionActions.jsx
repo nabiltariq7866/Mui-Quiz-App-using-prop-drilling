@@ -1,47 +1,28 @@
-import EditAdminQuestion from "./EditAdminQuestion";
-import Modal from "./Modal";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PieChartIcon from "@mui/icons-material/PieChart";
+import DeleteQuestion from "./DeleteQuestion";
+import ShowOptionSelectChart from "./ShowOptionSelectChart";
+import EditIcon from "./EditIcon";
 const QuestionActions = ({
-    data,
-    handleEdit,
-    handleDelete,
-    handleChart,
-    activeModal,
-    editData,
-    setEditData,
-    setModal,
-    modal,
-    setCorrectAnswer,
-    correctAnswer,
-    adminQuestionCollection,
-    setAdminQuestionCollection,
-    setaddInput,
-  }) => (
+  data,
+  adminQuestionCollection,
+  setAdminQuestionCollection,
+  quizData,
+}) => {
+  console.log(adminQuestionCollection)
+  return (
     <div className="flex w-[20%] justify-evenly">
-      <CreateIcon
-        onClick={() => handleEdit(data)}
-        sx={{ color: "#757575", cursor: "pointer" }}
+      <EditIcon
+        data={data}
+        setAdminQuestionCollection={setAdminQuestionCollection}
+        adminQuestionCollection={adminQuestionCollection}
       />
-      {activeModal === "edit" && (
-        <Modal setEditData={setEditData} editData={editData} setModal={setModal} modal={modal}>
-          <EditAdminQuestion
-            data={editData}
-            adminQuestionCollection={adminQuestionCollection}
-            setAdminQuestionCollection={setAdminQuestionCollection}
-            setModal={setModal}
-          />
-        </Modal>
-      )}
-      <DeleteIcon
-        onClick={() => handleDelete(data.id)}
-        sx={{ color: "#757575", cursor: "pointer" }}
+
+      <DeleteQuestion
+        data={data}
+        setAdminQuestionCollection={setAdminQuestionCollection}
+        adminQuestionCollection={adminQuestionCollection}
       />
-      <PieChartIcon
-        onClick={() => handleChart(data)}
-        sx={{ color: "#757575", cursor: "pointer" }}
-      />
+      <ShowOptionSelectChart data={data} quizData={quizData} />
     </div>
   );
-  export default QuestionActions;
+};
+export default QuestionActions;

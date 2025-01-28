@@ -3,8 +3,7 @@ import QuestionOption from "./QuestionOption";
 import QuestionOptionTureFalse from "./QuestionOptionTureFalse";
 
 const EditAdminQuestion = ({ adminQuestionCollection,setAdminQuestionCollection,setModal, data }) => {
-  console.log("edit modal");
-  console.log(data);
+  console.log(adminQuestionCollection)
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   console.log(options);

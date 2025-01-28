@@ -6,37 +6,15 @@ const AllTask = ({
   index,
   data,
   finalResult,
-  handleChartItem,
-  setActiveModal,
-  activeModal,
+  quizData,
   setAnswerSelected,
   setSelectedAnswer,
   selectedAnswer,
-  setEditData,
-  setaddInput,
   setAdminQuestionCollection,
   adminQuestionCollection,
-  setCorrectAnswer,
-  correctAnswer,
-  editData,
-  setModal,
-  modal,
 }) => {
   const userData = JSON.parse(localStorage.getItem("login")) || {};
-
-  const handleEditfun = (data) => {
-    setEditData(data);
-    setActiveModal("edit");
-    setModal(true);
-  };
-
-  const handleDelete = (id) => {
-    const updatedQuestions = adminQuestionCollection.filter(
-      (item) => item.id !== id
-    );
-    setAdminQuestionCollection(updatedQuestions);
-  };
-
+console.log(adminQuestionCollection)
   const handleAnswerClick = (userAns) => {
     if (userData.role === "user" && !finalResult) {
       const isCorrect = userAns === data.correctAnswer;
@@ -79,19 +57,9 @@ const AllTask = ({
             question={
               <QuestionActions
                 data={data}
-                handleEdit={handleEditfun}
-                handleDelete={handleDelete}
-                handleChart={handleChartItem}
-                activeModal={activeModal}
-                editData={editData}
-                setEditData={setEditData}
-                setModal={setModal}
-                modal={modal}
-                setCorrectAnswer={setCorrectAnswer}
-                correctAnswer={correctAnswer}
                 adminQuestionCollection={adminQuestionCollection}
                 setAdminQuestionCollection={setAdminQuestionCollection}
-                setaddInput={setaddInput}
+                quizData={quizData}
               />
             }
           />
