@@ -42,8 +42,6 @@ const AllQuizDetails = ({
             <QuizDetails
               selectedQuiz={selectedQuiz}
               setSelectedQuiz={setSelectedQuiz}
-              setModal={setModal}
-              modal={modal}
             />
           </Modal>
         )}

@@ -6,7 +6,6 @@ const EditAdminQuestion = ({ adminQuestionCollection,setAdminQuestionCollection,
   console.log(adminQuestionCollection)
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
-  console.log(options);
   useEffect(() => {
     setOptions([]);
     if (data && data.option) {
@@ -15,14 +14,7 @@ const EditAdminQuestion = ({ adminQuestionCollection,setAdminQuestionCollection,
         option: item,
         isCorrect: item === data.correctAnswer,
       }));
-
-      setOptions((prev) => {
-        const existingOptions = prev.map((opt) => JSON.stringify(opt));
-        const newOptions = formattedOptions.filter(
-          (opt) => !existingOptions.includes(JSON.stringify(opt))
-        );
-        return [...prev, ...newOptions];
-      });
+      setOptions(formattedOptions); 
     }
     setQuestion(data.Question);
   }, [data]);

@@ -2,7 +2,6 @@ import React from "react";
 import AllTask from "./AllTask";
 
 const SelectedQuizdetail = ({ selectedQuiz }) => {
-  console.log(selectedQuiz)
   return (
     <div  className="bg-white ml-[-8px] w-[1423px] h-[90vh] mt-[4.5rem] rounded-3xl box-border px-1 overflow-hidden">
     <div className="w-full  h-[90vh] pr-2 overflow-y-auto box-border px-2 scroll-style">
